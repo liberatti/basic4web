@@ -7,7 +7,7 @@ _config = {
     'JWT_AUD': 'app',
     'JWT_SECRET_KEY': 'dev',
     'JWT_EXPIRE': 1800,
-    'LOG_LEVEL': 'INFO',
+    'LOGLEVEL': 'INFO',
     'CORE_VERSION': 'v0.0.2'
 }
 
