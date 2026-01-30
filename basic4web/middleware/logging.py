@@ -25,7 +25,7 @@ logging.setLoggerClass(CustomLogger)
 
 logger = logging.getLogger(__name__)
 
-level = getattr(logging, base_config.get("LOG_LEVEL"), logging.INFO)
+level = getattr(logging, base_config.get("LOGLEVEL"), logging.INFO)
 logger.setLevel(level)
 
 console_handler = logging.StreamHandler()

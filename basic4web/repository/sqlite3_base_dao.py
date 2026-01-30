@@ -7,7 +7,14 @@ from basic4web.middleware.logging import logger
 
 class SQLite3DAO:
 
-    def __init__(self, db_path, table_name, schema=None, conn=None, auto_commit=True):
+    def __init__(
+            self,
+            db_path: str,
+            table_name: str,
+            schema: type[Schema] | None = None,
+            conn: sqlite3.Connection | None = None,
+            auto_commit: bool = True,
+    ):
         self.table_name = table_name
         self.schema = schema() if schema else None
         self.pageSchema = None
@@ -27,8 +34,8 @@ class SQLite3DAO:
             self.pageSchema = page_class()
 
     def connect(self) -> None:
-        logger.debug(f"SQLite3DAO: {self.db_path}/app.sqlite")
-        if not self.conn:
+        if not self.is_connected():
+            logger.debug(f"SQLite3DAO: {self.db_path}/app.sqlite")
             self.conn = sqlite3.connect(f"{self.db_path}/app.sqlite", timeout=300, check_same_thread=False)
             self.conn.row_factory = sqlite3.Row
 
@@ -40,11 +47,17 @@ class SQLite3DAO:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_type is not None:
-            self.conn.rollback()
-        elif self.auto_commit:
-            self.conn.commit()
-        self.conn.close()
+        try:
+            if exc_type is not None:
+                self.conn.rollback()
+            elif self.auto_commit:
+                self.commit()
+        finally:
+            self.conn.close()
+
+    def commit(self):
+        logger.debug(f"[{self.auto_commit}] commit")
+        self.conn.commit()
 
     def to_dict(self, row):
         return dict(row) if row else row
@@ -133,7 +146,7 @@ class SQLite3DAO:
         values = list(vo.values()) + [_id]
         self._query(sql, values)
         if self.auto_commit:
-            self.conn.commit()
+            self.commit()
         return True
 
     def persist(self, vo):
@@ -142,12 +155,12 @@ class SQLite3DAO:
         values_placeholder = ", ".join(["?"] * len(vo))
         sql = f"INSERT INTO {self.table_name} ({keys}) VALUES ({values_placeholder})"
         values = list(vo.values())
-
+        logger.debug(self._interpolate_sql(sql, values))
         cursor = self.conn.cursor()
         try:
             cursor.execute(sql, values)
             if self.auto_commit:
-                self.conn.commit()
+                self.commit()
             return cursor.lastrowid
         finally:
             cursor.close()
@@ -162,11 +175,12 @@ class SQLite3DAO:
         sql = f"INSERT INTO {self.table_name} ({keys}) VALUES ({values_placeholder})"
 
         values_list = [tuple(self.from_dict(vo).values()) for vo in arr]
+        logger.debug(self._interpolate_sql(sql, values_list))
         cursor = self.conn.cursor()
         try:
             cursor.executemany(sql, values_list)
             if self.auto_commit:
-                self.conn.commit()
+                self.commit()
             return cursor.rowcount
         except Exception:
             self.conn.rollback()
