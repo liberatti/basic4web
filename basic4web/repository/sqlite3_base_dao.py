@@ -36,7 +36,13 @@ class SQLite3DAO:
     def connect(self) -> None:
         if not self.is_connected():
             logger.debug(f"SQLite3DAO: {self.db_path}/app.sqlite")
-            self.conn = sqlite3.connect(f"{self.db_path}/app.sqlite", timeout=300, check_same_thread=False)
+            self.conn = sqlite3.connect(
+                f"{self.db_path}/app.sqlite",
+                timeout=300,
+                check_same_thread=False
+            )
+            self.conn.execute("PRAGMA journal_mode=WAL;")
+            self.conn.execute("PRAGMA synchronous=NORMAL;")
             self.conn.row_factory = sqlite3.Row
 
     def is_connected(self) -> bool:
