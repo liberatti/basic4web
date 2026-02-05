@@ -12,7 +12,9 @@ def init_socketio(app):
 
 def get_socketio():
     if socketio is None:
-        raise RuntimeError("SocketIO não foi inicializado. Chame init_socketio() primeiro.")
+        raise RuntimeError(
+            "SocketIO não foi inicializado. Chame init_socketio() primeiro."
+        )
     return socketio
 
 

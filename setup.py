@@ -17,16 +17,16 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        "requests>=2.31.0",
-        "pytz>=2023.3",
-        "flask>=2.3.0",
-        "PyJWT>=2.8.0",
-        "marshmallow>=3.20.0",
+        "requests>=2.32.5",
+        "pytz>=2025.1",
+        "flask>=3.1.2",
+        "PyJWT>=2.11.0",
+        "marshmallow>=3.26.1",
     ],
     extras_require={
         "web": [
-            "flask-socketio>=5.3.0",
-            "eventlet>=0.33.0",
+            "flask-socketio>=5.6.0",
+            "eventlet>=0.40.4",
         ],
         "oracle": ["cx_Oracle~=8.3.0"],
         "mongo": ["pymongo>=4.5.0"],
