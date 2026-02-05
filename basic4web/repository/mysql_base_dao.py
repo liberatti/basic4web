@@ -2,6 +2,7 @@ import pymysql
 from marshmallow import Schema, fields
 
 from basic4web.middleware.logging import logger
+from basic4web.repository.schemas.page_meta_schema import PageMetaSchema
 
 
 class MySQLDAO:
@@ -32,7 +33,7 @@ class MySQLDAO:
                 "pagination",
                 (Schema,),
                 {
-                    "metadata": fields.Nested("PageMetaSchema", many=False),
+                    "metadata": fields.Nested(PageMetaSchema, many=False),
                     "data": fields.Nested(schema, many=True),
                 },
             )

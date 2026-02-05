@@ -3,19 +3,10 @@ from typing import Any, Dict, Optional, Union
 
 import pymongo
 from bson import ObjectId
-from marshmallow import EXCLUDE, Schema, fields
+from marshmallow import Schema, fields
 from pymongo.errors import PyMongoError
 
 from basic4web.middleware.logging import logger
-
-
-class PageMetaSchema(Schema):
-    class Meta:
-        unknown = EXCLUDE
-
-    total_elements = fields.Integer()
-    page = fields.Integer()
-    per_page = fields.Integer()
 
 
 class MongoDAO:

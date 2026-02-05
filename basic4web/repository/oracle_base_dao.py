@@ -2,6 +2,7 @@ import cx_Oracle
 from marshmallow import Schema, fields
 
 from basic4web.middleware.logging import logger
+from basic4web.repository.schemas.page_meta_schema import PageMetaSchema
 
 
 class OracleDAO:
@@ -20,7 +21,7 @@ class OracleDAO:
                 "pagination",
                 (Schema,),
                 {
-                    "metadata": fields.Nested("PageMetaSchema", many=False),
+                    "metadata": fields.Nested(PageMetaSchema, many=False),
                     "data": fields.Nested(schema, many=True),
                 },
             )
