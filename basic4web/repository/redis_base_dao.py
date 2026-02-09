@@ -59,11 +59,13 @@ class RedisDAO:
 
             try:
                 data = json.loads(raw)
-            except json.JSONDecodeError:
+                if isinstance(data, dict):
+                    data["_id"] = key
+                else:
+                    data = {"_id": key, "value": data}
+                items.append(data)
+            except (json.JSONDecodeError, TypeError):
                 continue
-
-            data["_id"] = key
-            items.append(data)
 
         return items
 
