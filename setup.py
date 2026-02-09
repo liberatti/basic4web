@@ -7,7 +7,7 @@ readme = (this_dir / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="basic4web",
-    version="v0.0.3",
+    version="v0.0.4",
     author="Gustavo Liberatti",
     author_email="liberatti.gustavo@gmail.com",
     description="Biblioteca interna para uso em projetos privados.",

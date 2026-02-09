@@ -20,6 +20,7 @@ class RedisDAO:
                 db=self.db,
                 decode_responses=True
             )
+            self.conn.ping()
 
     def is_connected(self):
         try:
